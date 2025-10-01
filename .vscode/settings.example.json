@@ -1,0 +1,7 @@
+{
+	"objectscript.conn": {
+		"active": true,
+		"server": "workspace-server",
+		"ns": "WORKSHOP_REST"
+	}
+}
