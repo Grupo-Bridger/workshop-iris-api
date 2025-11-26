@@ -1,0 +1,108 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"intersystems.testingManager.client.relativeTestRoot": "src/internal/test",
+		"editor.formatOnSave": true,
+		"editor.detectIndentation": false,
+		"[objectscript-class]": {
+			"editor.defaultFormatter": "intersystems.language-server"
+		},
+		"intersystems.language-server.diagnostics.classes": true,
+		"intersystems.language-server.diagnostics.deprecation": true,
+		"intersystems.language-server.diagnostics.parameters": true,
+		"intersystems.language-server.diagnostics.routines": true,
+		"intersystems.language-server.diagnostics.zutil": true,
+		"intersystems.language-server.formatting.commands.case": "word",
+		"intersystems.language-server.formatting.commands.length": "long",
+		"intersystems.language-server.formatting.expandClassNames": true,
+		"intersystems.language-server.formatting.system.case": "upper",
+		"intersystems.language-server.formatting.system.length": "long",
+		"intersystems.language-server.hover.commands": true,
+		"intersystems.language-server.hover.preprocessor": true,
+		"intersystems.language-server.hover.system": true,
+		"intersystems.language-server.refactor.exceptionVariable": "exception",
+		"intersystems.language-server.signaturehelp.documentation": true,
+		"intersystems.language-server.suggestTheme": false,
+		"intersystems.language-server.trace.server": "off",
+		"intersystems.servers": {
+			"workshop-api-local": {
+				"webServer": {
+					"scheme": "http",
+					"host": "localhost",
+					"port": 52775
+				}
+			}
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"intersystems-community.servermanager",
+			"intersystems-community.objectscript-pack",
+			"intersystems-community.vscode-objectscript",
+			"intersystems-community.testingmanager",
+			"intersystems-community.sqltools-intersystems-driver",
+			"intersystems.language-server",
+			"eamodio.gitlens",
+			"dracula-theme.theme-dracula",
+			"aaron-bond.better-comments",
+			"editorconfig.editorconfig",
+			"mtxr.sqltools",
+			"github.vscode-pull-request-github",
+			"cardinal90.multi-cursor-case-preserve"
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "objectscript",
+				"request": "attach",
+				"name": "ObjectScript Attach",
+				"processId": "${command:PickProcess}",
+				"system": true
+			}
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Start IRIS Server",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"compose",
+					"-f",
+					"docker-compose.yml",
+					"up",
+					"-d",
+				],
+				"problemMatcher": [],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				}
+			},
+			{
+				"label": "Stop IRIS Server",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"compose",
+					"-f",
+					"docker-compose.yml",
+					"down",
+				],
+				"problemMatcher": [],
+				"group": {
+					"kind": "build",
+					"isDefault": false
+				}
+			}
+		]
+	}
+}

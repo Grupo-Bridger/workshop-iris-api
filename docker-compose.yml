@@ -1,0 +1,22 @@
+name: bridger-api-workshop
+volumes:
+  iris-data:
+  iris-db:
+  iris-backup:
+  iris-config:
+services:
+  iris:
+    image: silveira42/iris-workshop-api:latest
+    container_name: api-workshop
+    hostname: api-workshop
+    volumes:
+      - iris-data:/usr/irissys
+      - iris-db:/db
+      - iris-backup:/backup
+      - iris-config:/config
+      - iris-files:/files
+    restart: no
+    ports:
+      - 52775:52773
+      - 51775:51773
+      - 1975:1972
