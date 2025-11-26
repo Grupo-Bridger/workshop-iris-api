@@ -2,6 +2,6 @@
 	"objectscript.conn": {
 		"active": true,
 		"server": "workshop-api-local",
-		"ns": "WORKSHOP_REST"
+		"ns": "WORKSHOP_API"
 	}
 }
