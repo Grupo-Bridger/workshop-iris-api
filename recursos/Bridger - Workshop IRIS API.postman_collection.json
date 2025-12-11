@@ -1,0 +1,292 @@
+{
+	"info": {
+		"_postman_id": "72b5d723-d6b1-45b2-8a5e-25b452948df5",
+		"name": "Bridger - Workshop IRIS API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29173526",
+		"_collection_link": "https://planetary-spaceship-175420.postman.co/workspace/Cursos~a344f323-ab49-4bd1-98cb-50436d958445/collection/29173526-72b5d723-d6b1-45b2-8a5e-25b452948df5?action=share&source=collection_link&creator=29173526"
+	},
+	"item": [
+		{
+			"name": "OpenAPI",
+			"item": [
+				{
+					"name": "Criar API Produtos com OpenAPI",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "bruno",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "silveira42",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"swagger\": \"2.0\",\n  \"info\": {\n    \"title\": \"API de Produtos (CRUD)\",\n    \"version\": \"1.0.0\",\n    \"description\": \"Documentação OpenAPI para um CRUD simples de cadastro de produtos.\\nInclui endpoints para listar, criar, consultar, atualizar e excluir produtos.\"\n  },\n  \"host\": \"api.exemplo.com\",\n  \"basePath\": \"/v1\",\n  \"schemes\": [\n    \"https\",\n    \"http\"\n  ],\n  \"consumes\": [\n    \"application/json\"\n  ],\n  \"produces\": [\n    \"application/json\"\n  ],\n  \"tags\": [\n    {\n      \"name\": \"Produtos\",\n      \"description\": \"Operações relacionadas ao cadastro de produtos\"\n    }\n  ],\n  \"paths\": {\n    \"/products\": {\n      \"get\": {\n        \"tags\": [\"Produtos\"],\n        \"summary\": \"Listar produtos\",\n        \"description\": \"Retorna uma lista paginada de produtos. Suporta busca por nome e paginação.\",\n        \"operationId\": \"ListaProdutos\",\n        \"parameters\": [\n          {\n            \"name\": \"page\",\n            \"in\": \"query\",\n            \"description\": \"Número da página (1-based)\",\n            \"type\": \"integer\",\n            \"format\": \"int32\",\n            \"minimum\": 1,\n            \"default\": 1\n          },\n          {\n            \"name\": \"limit\",\n            \"in\": \"query\",\n            \"description\": \"Quantidade de itens por página\",\n            \"type\": \"integer\",\n            \"format\": \"int32\",\n            \"minimum\": 1,\n            \"maximum\": 100,\n            \"default\": 20\n          },\n          {\n            \"name\": \"search\",\n            \"in\": \"query\",\n            \"description\": \"Texto para buscar pelo nome ou descrição\",\n            \"type\": \"string\"\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Lista de produtos retornada com sucesso\",\n            \"schema\": {\n              \"$ref\": \"#/definitions/ProductListResponse\"\n            }\n          },\n          \"500\": { \"$ref\": \"#/responses/InternalError\" }\n        }\n      },\n      \"post\": {\n        \"tags\": [\"Produtos\"],\n        \"summary\": \"Criar um novo produto\",\n        \"description\": \"Cria um produto e retorna o registro criado.\",\n        \"operationId\": \"CriaProduto\",\n        \"security\": [{ \"bearerAuth\": [] }],\n        \"parameters\": [\n          {\n            \"name\": \"product\",\n            \"in\": \"body\",\n            \"required\": true,\n            \"schema\": { \"$ref\": \"#/definitions/ProductCreate\" },\n            \"description\": \"Objeto do produto a ser criado\"\n          }\n        ],\n        \"responses\": {\n          \"201\": {\n            \"description\": \"Produto criado com sucesso\",\n            \"schema\": { \"$ref\": \"#/definitions/Product\" }\n          },\n          \"400\": { \"$ref\": \"#/responses/BadRequest\" },\n          \"401\": { \"$ref\": \"#/responses/Unauthorized\" },\n          \"500\": { \"$ref\": \"#/responses/InternalError\" }\n        }\n      }\n    },\n    \"/products/{id}\": {\n      \"parameters\": [\n        {\n          \"name\": \"id\",\n          \"in\": \"path\",\n          \"required\": true,\n          \"description\": \"ID único do produto (UUID ou inteiro, conforme implementação)\",\n          \"type\": \"string\"\n        }\n      ],\n      \"get\": {\n        \"tags\": [\"Produtos\"],\n        \"summary\": \"Consultar produto por ID\",\n        \"description\": \"Retorna os detalhes de um produto específico.\",\n        \"operationId\": \"ConsultaProdutoPorId\",\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Produto encontrado\",\n            \"schema\": { \"$ref\": \"#/definitions/Product\" }\n          },\n          \"404\": { \"$ref\": \"#/responses/NotFound\" },\n          \"500\": { \"$ref\": \"#/responses/InternalError\" }\n        }\n      },\n      \"put\": {\n        \"tags\": [\"Produtos\"],\n        \"summary\": \"Atualizar produto (substituição completa)\",\n        \"description\": \"Substitui todos os campos do produto por valores fornecidos.\",\n        \"operationId\": \"AtualizaProduto\",\n        \"security\": [{ \"bearerAuth\": [] }],\n        \"parameters\": [\n          {\n            \"name\": \"product\",\n            \"in\": \"body\",\n            \"required\": true,\n            \"schema\": { \"$ref\": \"#/definitions/ProductCreate\" },\n            \"description\": \"Objeto com os campos que substituirão o produto existente\"\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Produto atualizado com sucesso\",\n            \"schema\": { \"$ref\": \"#/definitions/Product\" }\n          },\n          \"400\": { \"$ref\": \"#/responses/BadRequest\" },\n          \"401\": { \"$ref\": \"#/responses/Unauthorized\" },\n          \"404\": { \"$ref\": \"#/responses/NotFound\" },\n          \"500\": { \"$ref\": \"#/responses/InternalError\" }\n        }\n      },\n      \"patch\": {\n        \"tags\": [\"Produtos\"],\n        \"summary\": \"Atualizar parcialmente um produto\",\n        \"description\": \"Atualiza apenas os campos informados do produto.\",\n        \"operationId\": \"AtualizaProdutoParcial\",\n        \"security\": [{ \"bearerAuth\": [] }],\n        \"parameters\": [\n          {\n            \"name\": \"product\",\n            \"in\": \"body\",\n            \"required\": true,\n            \"schema\": { \"$ref\": \"#/definitions/ProductUpdate\" },\n            \"description\": \"Objeto com os campos a serem atualizados (parcial)\"\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Produto atualizado com sucesso\",\n            \"schema\": { \"$ref\": \"#/definitions/Product\" }\n          },\n          \"400\": { \"$ref\": \"#/responses/BadRequest\" },\n          \"401\": { \"$ref\": \"#/responses/Unauthorized\" },\n          \"404\": { \"$ref\": \"#/responses/NotFound\" },\n          \"500\": { \"$ref\": \"#/responses/InternalError\" }\n        }\n      },\n      \"delete\": {\n        \"tags\": [\"Produtos\"],\n        \"summary\": \"Excluir produto\",\n        \"description\": \"Remove o produto do cadastro.\",\n        \"operationId\": \"ExcluiProduto\",\n        \"security\": [{ \"bearerAuth\": [] }],\n        \"responses\": {\n          \"204\": { \"description\": \"Produto excluído com sucesso (sem conteúdo)\" },\n          \"401\": { \"$ref\": \"#/responses/Unauthorized\" },\n          \"404\": { \"$ref\": \"#/responses/NotFound\" },\n          \"500\": { \"$ref\": \"#/responses/InternalError\" }\n        }\n      }\n    }\n  },\n  \"definitions\": {\n    \"Product\": {\n      \"type\": \"object\",\n      \"required\": [\"id\", \"name\", \"price\", \"quantity\"],\n      \"properties\": {\n        \"id\": {\n          \"type\": \"string\",\n          \"description\": \"Identificador único do produto\",\n          \"example\": \"b6a1f7e2-3a4b-11ec-8d3d-0242ac120002\"\n        },\n        \"name\": { \"type\": \"string\", \"description\": \"Nome do produto\", \"example\": \"Camiseta Básica\" },\n        \"description\": {\n          \"type\": \"string\",\n          \"description\": \"Descrição detalhada do produto\",\n          \"example\": \"Camiseta 100% algodão, lavagem simples\"\n        },\n        \"price\": {\n          \"type\": \"number\",\n          \"format\": \"float\",\n          \"description\": \"Preço unitário do produto\",\n          \"example\": 49.9\n        },\n        \"quantity\": { \"type\": \"integer\", \"description\": \"Quantidade disponível em estoque\", \"example\": 120 },\n        \"tags\": {\n          \"type\": \"array\",\n          \"items\": { \"type\": \"string\" },\n          \"description\": \"Lista de tags/categorias do produto\",\n          \"example\": [\"roupa\", \"verão\"]\n        },\n        \"createdAt\": {\n          \"type\": \"string\",\n          \"format\": \"date-time\",\n          \"description\": \"Data de criação do registro\",\n          \"example\": \"2025-10-14T12:34:56Z\"\n        },\n        \"updatedAt\": {\n          \"type\": \"string\",\n          \"format\": \"date-time\",\n          \"description\": \"Data da última atualização do registro\",\n          \"example\": \"2025-10-14T12:34:56Z\"\n        }\n      }\n    },\n    \"ProductCreate\": {\n      \"type\": \"object\",\n      \"required\": [\"name\", \"price\"],\n      \"properties\": {\n        \"name\": { \"type\": \"string\" },\n        \"description\": { \"type\": \"string\" },\n        \"price\": { \"type\": \"number\", \"format\": \"float\" },\n        \"quantity\": { \"type\": \"integer\", \"default\": 0 },\n        \"tags\": { \"type\": \"array\", \"items\": { \"type\": \"string\" } }\n      }\n    },\n    \"ProductUpdate\": {\n      \"type\": \"object\",\n      \"description\": \"Campos opcionais para atualização parcial\",\n      \"properties\": {\n        \"name\": { \"type\": \"string\" },\n        \"description\": { \"type\": \"string\" },\n        \"price\": { \"type\": \"number\", \"format\": \"float\" },\n        \"quantity\": { \"type\": \"integer\" },\n        \"tags\": { \"type\": \"array\", \"items\": { \"type\": \"string\" } }\n      }\n    },\n    \"ProductListResponse\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"items\": { \"type\": \"array\", \"items\": { \"$ref\": \"#/definitions/Product\" } },\n        \"total\": { \"type\": \"integer\" },\n        \"page\": { \"type\": \"integer\" },\n        \"limit\": { \"type\": \"integer\" }\n      }\n    }\n  },\n  \"securityDefinitions\": {\n    \"bearerAuth\": {\n      \"type\": \"apiKey\",\n      \"name\": \"Authorization\",\n      \"in\": \"header\",\n      \"description\": \"Autenticação Bearer JWT. Enviar header: Authorization: Bearer {token}\"\n    }\n  },\n  \"security\": [{ \"bearerAuth\": [] }],\n  \"responses\": {\n    \"BadRequest\": { \"description\": \"Requisição inválida (erro de validação)\" },\n    \"Unauthorized\": { \"description\": \"Não autorizado (autenticação necessária)\" },\n    \"NotFound\": { \"description\": \"Recurso não encontrado\" },\n    \"InternalError\": { \"description\": \"Erro interno do servidor\" }\n  },\n  \"x-servers\": [\n    { \"url\": \"https://api.exemplo.com/v1\", \"description\": \"Servidor de produção (exemplo)\" },\n    { \"url\": \"http://localhost:8080/v1\", \"description\": \"Servidor local\" }\n  ],\n  \"x-examples\": {\n    \"curl-list\": {\n      \"summary\": \"Exemplo curl para listar produtos\",\n      \"value\": \"curl -X GET \\\"http://localhost:8080/v1/products?page=1&limit=20\\\" -H \\\"Accept: application/json\\\"\"\n    },\n    \"curl-create\": {\n      \"summary\": \"Exemplo curl para criar produto\",\n      \"value\": \"curl -X POST \\\"http://localhost:8080/v1/products\\\" -H \\\"Content-Type: application/json\\\" -H \\\"Authorization: Bearer <token>\\\" -d '{\\\"name\\\":\\\"Camiseta Básica\\\",\\\"price\\\":49.9,\\\"quantity\\\":120}'\"\n    }\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/mgmnt/v2/WORKSHOP_REST/exercicios.openapi",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"mgmnt",
+								"v2",
+								"WORKSHOP_REST",
+								"exercicios.openapi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Testar API GET Produto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/erp/products",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"erp",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CspRest",
+			"item": [
+				{
+					"name": "Lista Produtos Loja",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjMwNTYwMzMuMjU3NzMxLCJleHAiOjE3NjMwNTYwOTMsImlzcyI6InNpbHZlci1pcmlzLXNhbmRib3gvSVJJUyIsInN1YiI6ImFwaWNsaWVudCIsInNpZCI6IlR1b2Fuc2NEMy9IbEE4UGNaRUhqb05zVCIsImFwcCI6Ii9hcGkvbG9qYS8ifQ.cP4p2Qu0ra33AbSvHKRWo_GLbdDswEakSjOVBSlm66-m8iVr7uUSWQj2isTTyk6vY9KCf2gwZJ9_CzMrIjE6QQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/loja/produtos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"loja",
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cria Produto Loja",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "seuUsuario",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "silveira42",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Vestido\",\n    \"preco\": 90.12,\n    \"quantidadeEstoque\": 10997\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/loja/produto",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"loja",
+								"produto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Login",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "apiclient",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "apiclient",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/loja/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"loja",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Arquivos",
+			"item": [
+				{
+					"name": "Download arquivo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/arquivos/download/sample-1.pdf",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"arquivos",
+								"download",
+								"sample-1.pdf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload arquivo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/bruno/Workspace/Bridger/sample-1.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/arquivos/upload",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"arquivos",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Production",
+			"item": [
+				{
+					"name": "Busca Pedido por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/production/pedido/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"production",
+								"pedido",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
