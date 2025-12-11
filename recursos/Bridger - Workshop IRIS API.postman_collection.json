@@ -40,7 +40,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/mgmnt/v2/WORKSHOP_REST/exercicios.openapi",
+							"raw": "{{url}}/api/mgmnt/v2/WORKSHOP_API/exercicios.openapi",
 							"host": [
 								"{{url}}"
 							],
